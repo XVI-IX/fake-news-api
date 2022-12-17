@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, abort, jsonify
 from flask_cors import CORS
-from data_prep import clean_text
+from data_prep import clean_text, classify
 
 from models import setup_db, News
 
@@ -78,14 +78,14 @@ def create_app(test_config=None):
       "news_total": len(all_news)
     })
 
-  @app.route("/get_fake_news", methods=["GET"])
+  @app.route("/fake_news", methods=["GET"])
   def get_fake_news():
     """
     * Endpoint to fetch all news classified as FAKE in api
     * Arguments: None
     * Return: Returns a json object containing status, fake news and
               total number of fake news present in api
-    * Sample Request: `curl http://127.0.0.1:5000/get_fake_news`
+    * Sample Request: `curl http://127.0.0.1:5000/fake_news`
     """
     page = request.args.get("page", 1, type=int)
     fake_news = News.query.filter(News.label == 'FAKE').all()
@@ -101,6 +101,28 @@ def create_app(test_config=None):
       "news_total": len(News.query.all())
     })
   
+  @app.route("/real_news", methods=["GET"])
+  def get_real_news():
+    """
+    Endpoint to fetch all news classified as REAL in api
+
+    * Arguments: None
+    * Return: Returns a JSON object containing status, real news
+              and total number of real news present in api
+    * Sample Request: `curl http:127.0.0.1:5000/real_news`
+    """
+    real_news = News.query.filter(News.label == "REAL").all()
+
+    current = pagination(request, real_news)
+    if len(current) == 0:
+      abort(404)
+
+    return jsonify({
+      "success": True,
+      "real_news": current,
+      "news_total": len(News.query.all())
+    })
+
   @app.route("/add_news", methods=['POST'])
   def add_news():
     news = request.get_json()
@@ -131,3 +153,27 @@ def create_app(test_config=None):
       "success": True,
       "added": str(news.id)
     })
+
+  @app.route("/classify", methods=["POST"])
+  def classify():
+    """
+    Endpoint to classify news
+    Arguments: None
+    Return: Returns a json object containing status and predicted class
+
+    Sample Request: curl `http://127.0.0.1:5000/classify`
+    """
+    
+    news = request.get_json()
+
+    text = clean_text(news.get("text"))
+
+    prediction = classify(text)
+
+    return jsonify({
+      "success": True,
+      "class": prediction
+    })
+
+  
+  return app
