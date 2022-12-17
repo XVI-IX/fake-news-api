@@ -14,3 +14,4 @@ SQLAlchemy
 Werkzeug
 pandas
 numpy
+nltk

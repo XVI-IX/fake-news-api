@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS news(
+  id integer PRIMARY KEY,
+  title text not null,
+  text TEXT not null,
+  label text not null
+);
+
+\copy news from './Data/news.csv' with (FORMAT CSV, HEADER, DELIMITER ',');
