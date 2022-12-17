@@ -17,7 +17,7 @@ def pagination(request, selection):
   start = (page - 1) * PAGE_MAX
   end = PAGE_MAX
 
-  formatted_selection = [item.format for item in selection]
+  formatted_selection = [item.format() for item in selection]
 
   return formatted_selection[start:end]
 
@@ -61,7 +61,7 @@ def create_app(test_config=None):
     * Endpoint to fetch news in the api ordered by their ids
     * Arguments: None
     * Return: Returns a json object containing the status, news,
-      and total number of newsa in the api.
+      and total number of news in the api.
     * Sample request: `curl http://127.0.0.1:5000/news`
     """
 
@@ -98,7 +98,7 @@ def create_app(test_config=None):
     return jsonify({
       "success": True,
       "fake_news": current_news,
-      "news_total": len(News.query.all())
+      "fake_news_total": len(fake_news)
     })
   
   @app.route("/real_news", methods=["GET"])
@@ -120,7 +120,7 @@ def create_app(test_config=None):
     return jsonify({
       "success": True,
       "real_news": current,
-      "news_total": len(News.query.all())
+      "real_news_total": len(real_news)
     })
 
   @app.route("/add_news", methods=['POST'])

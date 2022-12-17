@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String
 from flask_sqlalchemy import SQLAlchemy
 import json
 
-database_path = ''
+database_path = 'postgresql://{}/{}'.format('localhost:5432', 'news_db')
 
 db = SQLAlchemy()
 
@@ -24,7 +24,7 @@ def setup_db(app, database_path=database_path):
 Main_News
 """
 class News(db.Model):
-  __tablename__ = "main_news"
+  __tablename__ = "news"
 
   id = Column(Integer, primary_key=True)
   title = Column(String(50), nullable=False)
