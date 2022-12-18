@@ -172,7 +172,7 @@ def create_app(test_config=None):
 
     return jsonify({
       "success": True,
-      "class": prediction
+      "label": prediction
     })
 
   
