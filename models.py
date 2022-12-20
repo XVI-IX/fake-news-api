@@ -36,11 +36,11 @@ class News(db.Model):
     self.text = text
     self.label = label
 
-  def _insert(self):
+  def insert(self):
     db.session.add(self)
     db.session.commit()
 
-  def _update(self):
+  def update(self):
     db.session.commit()
 
   def format(self):

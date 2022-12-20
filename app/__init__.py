@@ -155,7 +155,7 @@ def create_app(test_config=None):
     })
 
   @app.route("/classify", methods=["POST"])
-  def classify():
+  def predict():
     """
     Endpoint to classify news
     Arguments: None
@@ -165,8 +165,12 @@ def create_app(test_config=None):
     """
     
     news = request.get_json()
+    text = news.get("text")
 
-    text = clean_text(news.get("text"))
+    if not text:
+      abort(422)
+
+    text = clean_text(text)
 
     prediction = classify(text)
 
