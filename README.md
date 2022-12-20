@@ -290,3 +290,12 @@ The `--reload` flag will detect file changes and adjust the server accordingly.
 ```
 
 ## Testing
+
+To deploy the tests, run:
+
+```bash
+dropdb news_test
+createdb news_test
+psql news_test < news.psql
+python tests.py
+```
