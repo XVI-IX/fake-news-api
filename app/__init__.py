@@ -179,5 +179,25 @@ def create_app(test_config=None):
       "label": prediction
     })
 
-  
+  @app.errorhandler(404)
+  def not_found(error):
+    return jsonify({
+      "success": False,
+      "message": "File not found"
+    }), 404
+
+  @app.errorhandler(422)
+  def not_processed(error):
+    return jsonify({
+      'success': False,
+      "message": "Not processed"
+    }), 422
+
+  @app.errorhandler(500)
+  def server_error(error):
+    return jsonify({
+      "success": False,
+      "message": "Internal Server error"
+    }), 500
+    
   return app
