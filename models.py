@@ -47,6 +47,6 @@ class News(db.Model):
     return {
       'id': self.id,
       'title': self.title,
-      'text': self.text,
+      'text': f'{self.text[:50]}...',
       'label': self.label
     }
